@@ -1,0 +1,77 @@
+https://www.real-world-systems.com/docs/RAID.html
+
+---------------------------------Implementing RAID on Windows 2000 Servers---------------------------------------------
+
+Mirroring can be used on any volume including the boot and system volumes*.
+the volume to be mirrored must be a simple volume, and must have an area of unallocated space on a 
+second dynamic drive.
+
+from Chapter 11, Microsoft Windows 2000 Administrator's Pocket Consultant by William R. Stanek.
+
+Windows 2000 server supports software implemented disk mirroring, disk striping,
+and disk striping with parity. Some operating systems, don't support RAID.
+If you dual boot to one of these operating systems, RAID-configured drives will be unusable.
+
+Implementing RAID 0: Disk Striping
+
+Two or more volumes—on a separate disk—are configured as a stripe set. 
+Data written to the stripe set is broken into blocks that are called stripes.
+These stripes are written sequentially to all drives in the stripe set.
+
+The advantage of disk striping is speed, not reliability. 
+Data can be accessed on multiple disks using multiple disk heads, 
+which improves performance considerably. If any disk in the stripe set fails, 
+all data in the stripe set is lost. 
+You'll need to recreate the stripe set and restore the data from backups
+
+To maximize performance of the stripe set, there are several things you can do:
+•	
+Use disks that are on separate disk controllers. This allows the system to simultaneously access the drives.
+
+•	
+Don't use the disks containing the stripe set for other purposes. This allows each disk to dedicate its time to the stripe set.
+
+Create a stripe:
+1.
+
+In the Disk Management Graphical view, right-click an area marked Unallocated on a dynamic disk and then choose Create Volume. This starts the Create Volume Wizard. Read the welcome dialog box, and then click Next.
+
+2.
+
+Select Striped Volume as the volume type. Create the volume as described previously in this chapter in the section entitled "Creating Volumes and Volume Sets." The key difference is that you need at least two dynamic disks to create a striped volume.
+
+3.
+
+You can't expand a stripe set.
+
+<img/>
+
+--------------------------------------------------------------------------------------------------------------------
+Implementing RAID 1: Disk Mirroring
+Identically sized volumes on two different disks create a redundant data set. The disks are written with identical sets of information, and if one of the disk fails, data is be obtained from the other disk.
+
+Disk mirroring offers the same fault tolerance as disk striping with parity. Because mirrored disks don't need to write parity information, they offer better write performance. Disk striping with parity offers better read performance because read operations are spread over multiple drives.
+
+The major drawback to disk mirroring is that it cuts the usable storage space in half.
+
+Creating a Mirror Set in Disk Management
+
+In the Disk Management , right-click an area marked Unallocated on a dynamic disk, and then choose Create Volume. This starts the Create Volume Wizard. Read the welcome dialog box, and then click Next.
+Select Mirrored Volume as the volume type. Create the volume as described previously in the section of this chapter entitled "Creating Volumes and Volume Sets." The difference is that you must create two identically sized volumes and these volumes must be on separate dynamic drives.
+Figure 11-5: While disk mirroring typically uses a single drive controller to create a redundant data set, disk duplexing uses two drive controllers.
+
+<img/>
+--------------------------------------------------------------------------------------------------------------------
+Implementing RAID 5: Disk Striping with Parity A minimum of 3 disks are required. The volume on these disks are sized identically by Disk Management. Although you can place volume for a stripe set on up to 32 disks, in most circumstances sets with two to five volumes offer the best performance improvements. Beyond this, the performance improvement decreases significantly.
+RAID 5 is an enhanced version of RAID 1 (striping) with the addition of fault tolerance which ensures that the failure of a single disk won't bring down the set. Instead, the set continues to function with disk operations directed at the remaining disks in the set.
+
+RAID 5 writes parity checksums with the blocks of data. If any of the drives in the stripe set fails, the parity information is used to recover the data. (This process, called regenerating the striped set, is covered in the section of this chapter entitled "Managing RAIDs and Recovering from Failures.") If two disks fail the parity information isn't sufficient to recover the data, and you'll need to rebuild the striped set from backup.
+
+Note: The boot and system volumes can't be part of a striped set. Creating a Stripe Set with Parity
+
+In the Disk Management, right-click an area marked Unallocated on a dynamic disk and then choose Create Volume.
+Select RAID-5 Volume as the volume type. Select free space on three separate dynamic drives
+You can't expand a stripe set once it's created.
+
+
+--------------------------------------------------------------------------------------------------------------------
